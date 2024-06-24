@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "6354277542465187724"
+      "templateHash": "9980643455803700653"
     }
   },
   "parameters": {
@@ -62,7 +62,8 @@
   },
   "variables": {
     "name": "[toLower(format('{0}', parameters('aiHubName')))]",
-    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]"
+    "vmSize": "Standard_DC1s_v2",
+    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 3)]"
   },
   "resources": [
     {
@@ -80,6 +81,12 @@
           },
           "adminUsername": {
             "value": "[parameters('computeNodeAdminUserName')]"
+          },
+          "vmSize": {
+            "value": "[variables('vmSize')]"
+          },
+          "uniqueSuffix": {
+            "value": "[variables('uniqueSuffix')]"
           }
         },
         "template": {
@@ -89,17 +96,10 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "16487001860069182121"
+              "templateHash": "7740456860220538882"
             }
           },
           "parameters": {
-            "vmName": {
-              "type": "string",
-              "defaultValue": "simpleLinuxVM",
-              "metadata": {
-                "description": "The name of your Virtual Machine."
-              }
-            },
             "adminUsername": {
               "type": "string",
               "metadata": {
@@ -123,18 +123,10 @@
                 "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
               }
             },
-            "dnsLabelPrefix": {
-              "type": "string",
-              "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id)))]",
-              "metadata": {
-                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-              }
-            },
             "ubuntuOSVersion": {
               "type": "string",
               "defaultValue": "Ubuntu-2204",
               "allowedValues": [
-                "Ubuntu-2004",
                 "Ubuntu-2204"
               ],
               "metadata": {
@@ -150,30 +142,14 @@
             },
             "vmSize": {
               "type": "string",
-              "defaultValue": "Standard_DC1s_v2",
               "metadata": {
                 "description": "The size of the VM"
               }
             },
-            "virtualNetworkName": {
+            "uniqueSuffix": {
               "type": "string",
-              "defaultValue": "vNet",
               "metadata": {
-                "description": "Name of the VNET"
-              }
-            },
-            "subnetName": {
-              "type": "string",
-              "defaultValue": "Subnet",
-              "metadata": {
-                "description": "Name of the subnet in the virtual network"
-              }
-            },
-            "networkSecurityGroupName": {
-              "type": "string",
-              "defaultValue": "SecGroupNet",
-              "metadata": {
-                "description": "Name of the Network Security Group"
+                "description": "A short, unique suffix, that will be unique to each resource group"
               }
             },
             "securityType": {
@@ -189,7 +165,6 @@
             }
           },
           "variables": {
-            "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
             "imageReference": {
               "Ubuntu-2004": {
                 "publisher": "Canonical",
@@ -204,8 +179,13 @@
                 "version": "latest"
               }
             },
-            "publicIPAddressName": "[format('{0}PublicIP', parameters('vmName'))]",
-            "networkInterfaceName": "[format('ni-{0}', variables('uniqueSuffix'))]",
+            "publicIPAddressName": "[format('pip-{0}', parameters('uniqueSuffix'))]",
+            "networkInterfaceName": "[format('ni-{0}', parameters('uniqueSuffix'))]",
+            "networkSecurityGroupName": "[format('nsg-{0}', parameters('uniqueSuffix'))]",
+            "virtualNetworkName": "[format('vnet-{0}', parameters('uniqueSuffix'))]",
+            "subnetName": "[format('sb-{0}', parameters('uniqueSuffix'))]",
+            "vmName": "[format('vm-{0}', parameters('uniqueSuffix'))]",
+            "dnsLabelPrefix": "[toLower(format('{0}-{1}', variables('vmName'), uniqueString(resourceGroup().id)))]",
             "osDiskType": "Standard_LRS",
             "subnetAddressPrefix": "10.1.0.0/24",
             "addressPrefix": "10.1.0.0/16",
@@ -245,7 +225,7 @@
                     "name": "ipconfig1",
                     "properties": {
                       "subnet": {
-                        "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), '2023-09-01').subnets[0].id]"
+                        "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')), '2023-09-01').subnets[0].id]"
                       },
                       "privateIPAllocationMethod": "Dynamic",
                       "publicIPAddress": {
@@ -255,19 +235,19 @@
                   }
                 ],
                 "networkSecurityGroup": {
-                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
                 "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
               ]
             },
             {
               "type": "Microsoft.Network/networkSecurityGroups",
               "apiVersion": "2023-09-01",
-              "name": "[parameters('networkSecurityGroupName')]",
+              "name": "[variables('networkSecurityGroupName')]",
               "location": "[parameters('location')]",
               "properties": {
                 "securityRules": [
@@ -290,7 +270,7 @@
             {
               "type": "Microsoft.Network/virtualNetworks",
               "apiVersion": "2023-09-01",
-              "name": "[parameters('virtualNetworkName')]",
+              "name": "[variables('virtualNetworkName')]",
               "location": "[parameters('location')]",
               "properties": {
                 "addressSpace": {
@@ -300,7 +280,7 @@
                 },
                 "subnets": [
                   {
-                    "name": "[parameters('subnetName')]",
+                    "name": "[variables('subnetName')]",
                     "properties": {
                       "addressPrefix": "[variables('subnetAddressPrefix')]",
                       "privateEndpointNetworkPolicies": "Enabled",
@@ -322,7 +302,7 @@
                 "publicIPAllocationMethod": "Dynamic",
                 "publicIPAddressVersion": "IPv4",
                 "dnsSettings": {
-                  "domainNameLabel": "[parameters('dnsLabelPrefix')]"
+                  "domainNameLabel": "[variables('dnsLabelPrefix')]"
                 },
                 "idleTimeoutInMinutes": 4
               }
@@ -330,7 +310,7 @@
             {
               "type": "Microsoft.Compute/virtualMachines",
               "apiVersion": "2023-09-01",
-              "name": "[parameters('vmName')]",
+              "name": "[variables('vmName')]",
               "location": "[parameters('location')]",
               "properties": {
                 "hardwareProfile": {
@@ -353,7 +333,7 @@
                   ]
                 },
                 "osProfile": {
-                  "computerName": "[parameters('vmName')]",
+                  "computerName": "[variables('vmName')]",
                   "adminUsername": "[parameters('adminUsername')]",
                   "adminPassword": "[parameters('adminPasswordOrKey')]",
                   "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), null(), variables('linuxConfiguration'))]"
@@ -362,16 +342,16 @@
               },
               "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]",
-                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
                 "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
               ]
             },
             {
               "condition": "[and(and(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson').uefiSettings.secureBootEnabled), variables('securityProfileJson').uefiSettings.vTpmEnabled)]",
               "type": "Microsoft.Compute/virtualMachines/extensions",
               "apiVersion": "2023-09-01",
-              "name": "[format('{0}/{1}', parameters('vmName'), variables('extensionName'))]",
+              "name": "[format('{0}/{1}', variables('vmName'), variables('extensionName'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "publisher": "[variables('extensionPublisher')]",
@@ -389,7 +369,7 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+                "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
               ]
             }
           ],
@@ -400,7 +380,7 @@
             },
             "computeNodeId": {
               "type": "string",
-              "value": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+              "value": "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
             },
             "hostname": {
               "type": "string",

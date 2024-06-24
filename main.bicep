@@ -26,8 +26,10 @@ param tags object = {}
 // Variables
 var name = toLower('${aiHubName}')
 
+var vmSize = 'Standard_DC1s_v2'
+
 // Create a short, unique suffix, that will be unique to each resource group
-var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 5)
+var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 3)
 
 // VM
 module vm 'modules/vm.bicep' = {
@@ -35,6 +37,8 @@ module vm 'modules/vm.bicep' = {
   params: {
     adminPasswordOrKey: computeNodeAdminPassword
     adminUsername: computeNodeAdminUserName
+    vmSize: vmSize
+    uniqueSuffix: uniqueSuffix
   }
 }
 

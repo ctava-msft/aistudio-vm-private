@@ -1,6 +1,3 @@
-@description('The name of your Virtual Machine.')
-param vmName string = 'simpleLinuxVM'
-
 @description('Username for the Virtual Machine.')
 param adminUsername string
 
@@ -15,12 +12,8 @@ param authenticationType string = 'password'
 @secure()
 param adminPasswordOrKey string
 
-@description('Unique DNS Name for the Public IP used to access the Virtual Machine.')
-param dnsLabelPrefix string = toLower('${vmName}-${uniqueString(resourceGroup().id)}')
-
 @description('The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version.')
 @allowed([
-  'Ubuntu-2004'
   'Ubuntu-2204'
 ])
 param ubuntuOSVersion string = 'Ubuntu-2204'
@@ -29,19 +22,10 @@ param ubuntuOSVersion string = 'Ubuntu-2204'
 param location string = resourceGroup().location
 
 @description('The size of the VM')
-param vmSize string = 'Standard_DC1s_v2'
+param vmSize string
 
-@description('Name of the VNET')
-param virtualNetworkName string = 'vNet'
-
-@description('Name of the subnet in the virtual network')
-param subnetName string = 'Subnet'
-
-@description('Name of the Network Security Group')
-param networkSecurityGroupName string = 'SecGroupNet'
-
-// Create a short, unique suffix, that will be unique to each resource group
-var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 5)
+@description('A short, unique suffix, that will be unique to each resource group')
+param uniqueSuffix string
 
 @description('Security Type of the Virtual Machine.')
 @allowed([
@@ -64,8 +48,13 @@ var imageReference = {
     version: 'latest'
   }
 }
-var publicIPAddressName = '${vmName}PublicIP'
+var publicIPAddressName = 'pip-${uniqueSuffix}'
 var networkInterfaceName = 'ni-${uniqueSuffix}'
+var networkSecurityGroupName = 'nsg-${uniqueSuffix}'
+var virtualNetworkName = 'vnet-${uniqueSuffix}'
+var subnetName = 'sb-${uniqueSuffix}'
+var vmName = 'vm-${uniqueSuffix}'
+var dnsLabelPrefix = toLower('${vmName}-${uniqueString(resourceGroup().id)}')
 var osDiskType = 'Standard_LRS'
 var subnetAddressPrefix = '10.1.0.0/24'
 var addressPrefix = '10.1.0.0/16'
