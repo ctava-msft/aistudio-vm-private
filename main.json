@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "8806767115807015927"
+      "templateHash": "7280298359606085775"
     }
   },
   "parameters": {
@@ -694,11 +694,8 @@
           "aiServicesTarget": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.aiservicesTarget.value]"
           },
-          "computeNodeId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
-          },
-          "computeNodeNetworkInterfaceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.networkInterfaceId.value]"
+          "computeNodeAddress": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.hostname.value]"
           },
           "keyVaultId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.keyvaultId.value]"
@@ -714,7 +711,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "14008941619693512012"
+              "templateHash": "13876083812283191633"
             }
           },
           "parameters": {
@@ -749,16 +746,10 @@
                 "description": "AI hub description"
               }
             },
-            "computeNodeId": {
+            "computeNodeAddress": {
               "type": "string",
               "metadata": {
-                "description": "Compute Node Id"
-              }
-            },
-            "computeNodeNetworkInterfaceId": {
-              "type": "string",
-              "metadata": {
-                "description": "Compute Node Network Interface Id"
+                "description": "Compute Node Network Address"
               }
             },
             "location": {
@@ -809,16 +800,12 @@
               ]
             },
             {
-              "type": "Microsoft.MachineLearningServices/workspaces/computeNodes",
+              "type": "Microsoft.MachineLearningServices/workspaces/computes",
               "apiVersion": "2024-01-01-preview",
               "name": "[format('{0}/{1}', parameters('aiHubName'), format('{0}-computeNode', parameters('aiHubName')))]",
               "properties": {
-                "computeNodeId": "[parameters('computeNodeId')]",
-                "networkInterfaces": [
-                  {
-                    "id": "[parameters('computeNodeNetworkInterfaceId')]"
-                  }
-                ]
+                "computeType": "VirtualMachine",
+                "address": "[parameters('computeNodeAddress')]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('aiHubName'))]"

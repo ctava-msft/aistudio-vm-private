@@ -13,11 +13,8 @@ param aiHubFriendlyName string = aiHubName
 @description('AI hub description')
 param aiHubDescription string
 
-@description('Compute Node Id')
-param computeNodeId string
-
-@description('Compute Node Network Interface Id')
-param computeNodeNetworkInterfaceId string
+@description('Compute Node Network Address')
+param computeNodeAddress string
 
 @description('Azure region of the deployment')
 param location string
@@ -69,15 +66,11 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
     }
   }
 
-  resource computeNode 'computeNodes@2024-01-01-preview' = {
+  resource computeNode 'computes@2024-01-01-preview' = {
     name: '${aiHubName}-computeNode'
     properties: {
-      computeNodeId: computeNodeId
-      networkInterfaces: [
-        {
-          id: computeNodeNetworkInterfaceId
-        }
-      ]
+      computeType: 'VirtualMachine'
+      address: computeNodeAddress
     }
   }
 }
