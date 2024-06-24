@@ -507,7 +507,7 @@
             },
             "uniqueSuffix": {
               "type": "string",
-              "defaultValue": "001"
+              "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 5)]"
             },
             "tags": {
               "type": "object",
