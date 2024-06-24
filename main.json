@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "7200813606647300286"
+      "templateHash": "10273892224919048071"
     }
   },
   "parameters": {
@@ -89,7 +89,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "13293137896221067851"
+              "templateHash": "18428200368110720748"
             }
           },
           "parameters": {
@@ -189,6 +189,7 @@
             }
           },
           "variables": {
+            "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 4)]",
             "imageReference": {
               "Ubuntu-2004": {
                 "publisher": "Canonical",
@@ -204,7 +205,7 @@
               }
             },
             "publicIPAddressName": "[format('{0}PublicIP', parameters('vmName'))]",
-            "networkInterfaceName": "[format('{0}NetInt', parameters('vmName'))]",
+            "networkInterfaceName": "[format('ni-{0}', variables('uniqueSuffix'))]",
             "osDiskType": "Standard_LRS",
             "subnetAddressPrefix": "10.1.0.0/24",
             "addressPrefix": "10.1.0.0/16",
@@ -360,7 +361,10 @@
                 "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
               ]
             },
             {
