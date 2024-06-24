@@ -63,7 +63,7 @@
   "variables": {
     "name": "[toLower(format('{0}', parameters('aiHubName')))]",
     "vmSize": "Standard_DC1s_v2",
-    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 3)]"
+    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 4)]"
   },
   "resources": [
     {
@@ -491,7 +491,7 @@
             },
             "uniqueSuffix": {
               "type": "string",
-              "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 3)]"
+              "defaultValue": "[substring(uniqueString(resourceGroup().id), 0, 4)]"
             },
             "tags": {
               "type": "object",
