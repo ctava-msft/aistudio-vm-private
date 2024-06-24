@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "3156935819742080674"
+      "templateHash": "7200813606647300286"
     }
   },
   "parameters": {
@@ -68,7 +68,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "[format('{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
+      "name": "[format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -707,7 +707,7 @@
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.aiservicesTarget.value]"
           },
           "computeNodeId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
           },
           "keyVaultId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.keyvaultId.value]"
@@ -851,7 +851,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
-        "[resourceId('Microsoft.Resources/deployments', format('{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        "[resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
       ]
     }
   ]

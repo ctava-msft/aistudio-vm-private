@@ -31,7 +31,7 @@ var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 4)
 
 // VM
 module vm 'modules/vm.bicep' = {
-  name: '${name}-${uniqueSuffix}-deployment'
+  name: 'vm-${name}-${uniqueSuffix}-deployment'
   params: {
     adminPasswordOrKey: computeNodeAdminPassword
     adminUsername: computeNodeAdminUserName
