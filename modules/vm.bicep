@@ -41,7 +41,7 @@ param subnetName string = 'Subnet'
 param networkSecurityGroupName string = 'SecGroupNet'
 
 // Create a short, unique suffix, that will be unique to each resource group
-var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 4)
+var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 5)
 
 @description('Security Type of the Virtual Machine.')
 @allowed([

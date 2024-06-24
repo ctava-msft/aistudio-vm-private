@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "10273892224919048071"
+      "templateHash": "6354277542465187724"
     }
   },
   "parameters": {
@@ -62,7 +62,7 @@
   },
   "variables": {
     "name": "[toLower(format('{0}', parameters('aiHubName')))]",
-    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 4)]"
+    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]"
   },
   "resources": [
     {
@@ -89,7 +89,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "18428200368110720748"
+              "templateHash": "16487001860069182121"
             }
           },
           "parameters": {
@@ -189,7 +189,7 @@
             }
           },
           "variables": {
-            "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 4)]",
+            "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]",
             "imageReference": {
               "Ubuntu-2004": {
                 "publisher": "Canonical",
