@@ -205,6 +205,11 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = {
     }
     securityProfile: (securityType == 'TrustedLaunch') ? securityProfileJson : null
   } 
+  dependsOn: [
+    networkSecurityGroup
+    virtualNetwork
+    publicIPAddress
+  ]
 }
 
 resource vmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' = if (securityType == 'TrustedLaunch' && securityProfileJson.uefiSettings.secureBootEnabled && securityProfileJson.uefiSettings.vTpmEnabled) {
