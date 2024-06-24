@@ -695,10 +695,10 @@
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.aiservicesTarget.value]"
           },
           "computeNodeId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('cn-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
           },
           "computeNodeNetworkInterfaceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('cnid-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.networkInterfaceId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.networkInterfaceId.value]"
           },
           "keyVaultId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.keyvaultId.value]"
