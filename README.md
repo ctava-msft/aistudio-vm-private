@@ -11,7 +11,7 @@ languages:
 ---
 # Azure AI Studio Private Endpoints Setup
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fctava-msft%2Faistudio-vm-private%2Fmain%2Fazuredeploy.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fctava-msft%2Faistudio-vm-private%2Fmain%2Fmain.json)
 
 Azure AI Studio is built on Azure Machine Learning as the primary resource provider and takes a dependency on the Cognitive Services (Azure AI Services) resource provider to surface model-as-a-service endpoints for Azure Speech, Azure Content Safety, and Azure OpenAI service. An 'Azure AI hub' is a special kind of 'Azure Machine Learning workspace', that is kind = "hub".
 
@@ -32,14 +32,11 @@ The following table describes the resources created in the deployment:
 Generate ARM Template from bicep file:
 
 ```
-az bicep build --file <your-bicep-file>.bicep
+az bicep build --file main.bicep
 ```
 
-Generate azuredeploy.json:
-```
-bicep build main.bicep --outfile azuredeploy.json
-```
-azuredeploy.parameters.json was copied over from another file.
+main.parameters.json was copied over from another project.
+if needed, edit vmSize values in main.json for your region.
 
 ## Learn more
 

@@ -542,13 +542,13 @@
               "location": "[parameters('location')]",
               "properties": {
                 "hardwareProfile": {
-                  "vmSize": "Standard_A1_v2"
+                  "vmSize": "Standard_DC1s_v2"
                 },
                 "storageProfile": {
                   "imageReference": {
                     "publisher": "Canonical",
                     "offer": "UbuntuServer",
-                    "sku": "18.04-LTS",
+                    "sku": "22.04-LTS",
                     "version": "latest"
                   },
                   "osDisk": {
