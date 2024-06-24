@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "9980643455803700653"
+      "templateHash": "8806767115807015927"
     }
   },
   "parameters": {
@@ -96,7 +96,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "7740456860220538882"
+              "templateHash": "6694598175534088147"
             }
           },
           "parameters": {
@@ -385,6 +385,10 @@
             "hostname": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), '2023-09-01').dnsSettings.fqdn]"
+            },
+            "networkInterfaceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
             },
             "sshCommand": {
               "type": "string",
@@ -691,7 +695,10 @@
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.aiservicesTarget.value]"
           },
           "computeNodeId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('cn-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.computeNodeId.value]"
+          },
+          "computeNodeNetworkInterfaceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('cnid-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.networkInterfaceId.value]"
           },
           "keyVaultId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.keyvaultId.value]"
@@ -707,7 +714,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "6250703476769646414"
+              "templateHash": "14008941619693512012"
             }
           },
           "parameters": {
@@ -746,6 +753,12 @@
               "type": "string",
               "metadata": {
                 "description": "Compute Node Id"
+              }
+            },
+            "computeNodeNetworkInterfaceId": {
+              "type": "string",
+              "metadata": {
+                "description": "Compute Node Network Interface Id"
               }
             },
             "location": {
@@ -800,7 +813,12 @@
               "apiVersion": "2024-01-01-preview",
               "name": "[format('{0}/{1}', parameters('aiHubName'), format('{0}-computeNode', parameters('aiHubName')))]",
               "properties": {
-                "computeNodeId": "[parameters('computeNodeId')]"
+                "computeNodeId": "[parameters('computeNodeId')]",
+                "networkInterfaces": [
+                  {
+                    "id": "[parameters('computeNodeNetworkInterfaceId')]"
+                  }
+                ]
               },
               "dependsOn": [
                 "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('aiHubName'))]"

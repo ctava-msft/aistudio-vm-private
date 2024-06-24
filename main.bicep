@@ -71,6 +71,7 @@ module aiHub 'modules/aistudio-hub.bicep' = {
     aiServicesId: aiDependencies.outputs.aiservicesID
     aiServicesTarget: aiDependencies.outputs.aiservicesTarget
     computeNodeId: vm.outputs.computeNodeId
+    computeNodeNetworkInterfaceId: vm.outputs.networkInterfaceId
     keyVaultId: aiDependencies.outputs.keyvaultId
     storageAccountId: aiDependencies.outputs.storageId
   }

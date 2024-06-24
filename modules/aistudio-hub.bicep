@@ -16,6 +16,9 @@ param aiHubDescription string
 @description('Compute Node Id')
 param computeNodeId string
 
+@description('Compute Node Network Interface Id')
+param computeNodeNetworkInterfaceId string
+
 @description('Azure region of the deployment')
 param location string
 
@@ -70,6 +73,11 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
     name: '${aiHubName}-computeNode'
     properties: {
       computeNodeId: computeNodeId
+      networkInterfaces: [
+        {
+          id: computeNodeNetworkInterfaceId
+        }
+      ]
     }
   }
 }
