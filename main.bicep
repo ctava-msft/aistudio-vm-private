@@ -29,7 +29,7 @@ var name = toLower('${aiHubName}')
 var vmSize = 'Standard_DC1s_v2'
 
 // Create a short, unique suffix, that will be unique to each resource group
-var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 3)
+var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 5)
 
 // VM
 module vm 'modules/vm.bicep' = {
@@ -70,7 +70,6 @@ module aiHub 'modules/aistudio-hub.bicep' = {
     // dependent resources
     aiServicesId: aiDependencies.outputs.aiservicesID
     aiServicesTarget: aiDependencies.outputs.aiservicesTarget
-    computeNodeAddress: vm.outputs.hostname
     keyVaultId: aiDependencies.outputs.keyvaultId
     storageAccountId: aiDependencies.outputs.storageId
   }

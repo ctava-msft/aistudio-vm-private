@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "7280298359606085775"
+      "templateHash": "14531877794890316033"
     }
   },
   "parameters": {
@@ -63,7 +63,7 @@
   "variables": {
     "name": "[toLower(format('{0}', parameters('aiHubName')))]",
     "vmSize": "Standard_DC1s_v2",
-    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 3)]"
+    "uniqueSuffix": "[substring(uniqueString(resourceGroup().id), 0, 5)]"
   },
   "resources": [
     {
@@ -96,7 +96,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "6694598175534088147"
+              "templateHash": "5474329203449543152"
             }
           },
           "parameters": {
@@ -385,6 +385,14 @@
             "hostname": {
               "type": "string",
               "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), '2023-09-01').dnsSettings.fqdn]"
+            },
+            "virtualNetworkName": {
+              "type": "string",
+              "value": "[variables('virtualNetworkName')]"
+            },
+            "subnetId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')), '2023-09-01').subnets[0].id]"
             },
             "networkInterfaceId": {
               "type": "string",
@@ -694,9 +702,6 @@
           "aiServicesTarget": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.aiservicesTarget.value]"
           },
-          "computeNodeAddress": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.hostname.value]"
-          },
           "keyVaultId": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix'))), '2022-09-01').outputs.keyvaultId.value]"
           },
@@ -711,7 +716,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "13876083812283191633"
+              "templateHash": "2865921422111392620"
             }
           },
           "parameters": {
@@ -744,12 +749,6 @@
               "type": "string",
               "metadata": {
                 "description": "AI hub description"
-              }
-            },
-            "computeNodeAddress": {
-              "type": "string",
-              "metadata": {
-                "description": "Compute Node Network Address"
               }
             },
             "location": {
@@ -804,8 +803,11 @@
               "apiVersion": "2024-01-01-preview",
               "name": "[format('{0}/{1}', parameters('aiHubName'), format('{0}-computeNode', parameters('aiHubName')))]",
               "properties": {
-                "computeType": "VirtualMachine",
-                "address": "[parameters('computeNodeAddress')]"
+                "computeType": "ComputeInstance",
+                "properties": {
+                  "enableNodePublicIp": false,
+                  "vmSize": "Standard_DC1s_v2"
+                }
               },
               "dependsOn": [
                 "[resourceId('Microsoft.MachineLearningServices/workspaces', parameters('aiHubName'))]"
@@ -839,8 +841,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]",
-        "[resourceId('Microsoft.Resources/deployments', format('vm-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
+        "[resourceId('Microsoft.Resources/deployments', format('dependencies-{0}-{1}-deployment', variables('name'), variables('uniqueSuffix')))]"
       ]
     }
   ]

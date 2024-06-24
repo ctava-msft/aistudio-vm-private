@@ -13,9 +13,6 @@ param aiHubFriendlyName string = aiHubName
 @description('AI hub description')
 param aiHubDescription string
 
-@description('Compute Node Network Address')
-param computeNodeAddress string
-
 @description('Azure region of the deployment')
 param location string
 
@@ -69,8 +66,11 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   resource computeNode 'computes@2024-01-01-preview' = {
     name: '${aiHubName}-computeNode'
     properties: {
-      computeType: 'VirtualMachine'
-      address: computeNodeAddress
+      computeType: 'ComputeInstance'
+      properties: {
+        enableNodePublicIp: false
+        vmSize: 'Standard_DC1s_v2'
+      }
     }
   }
 }

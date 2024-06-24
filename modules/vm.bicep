@@ -228,5 +228,7 @@ resource vmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-09-01' =
 output adminUsername string = adminUsername
 output computeNodeId string = vm.id
 output hostname string = publicIPAddress.properties.dnsSettings.fqdn
+output virtualNetworkName string = virtualNetworkName
+output subnetId string = virtualNetwork.properties.subnets[0].id
 output networkInterfaceId string = networkInterface.id
 output sshCommand string = 'ssh ${adminUsername}@${publicIPAddress.properties.dnsSettings.fqdn}'
